@@ -315,6 +315,7 @@ Channel Gain Matrix:
   0.03195787 0.32399206]]
 
 Subcarrier Allocation Matrix:
+```
 [[0. 0. 0. 0. 1. 1. 0. 0.]
  [0. 0. 1. 1. 0. 0. 1. 0.]
  [0. 0. 0. 0. 0. 0. 0. 1.]
@@ -327,6 +328,7 @@ Subcarrier 5 allocated to User 1
 Subcarrier 6 allocated to User 1
 Subcarrier 7 allocated to User 2
 Subcarrier 8 allocated to User 3
+```
  <img width="792" height="485" alt="image" src="https://github.com/user-attachments/assets/21de0bf2-bb4b-4f15-a6ca-75cf19b71369" />
 
 **Result:**

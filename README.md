@@ -219,4 +219,192 @@ plt.show()
 **Result:**
   Thus, the MATLAB simulation for comparing transmitter diversity and receiver diversity performance was successfully implemented and analyzed.
 
+****4. Develop a MATLAB simulation for user allocation in OFDMA communication.**
 
+**Aim:**
+   To develop a MATLAB simulation for user allocation in an OFDMA communication system.
+
+**Objective:**
+  To allocate OFDMA subcarriers to users based on channel gain and analyze the resource allocation process.
+
+**Theory:**
+   Orthogonal Frequency Division Multiple Access (OFDMA) is a multiple access technique used in modern wireless communication systems such as 4G and 5G. In OFDMA, the available bandwidth is divided into several orthogonal subcarriers, and different subcarriers are assigned to different users.
+
+**Efficient user allocation improves:**
+
+System capacity
+Spectral efficiency
+Data transmission performance
+
+**In this simulation:****
+   Random channel gains are generated for users.
+Each subcarrier is allocated to the user with the maximum channel gain.
+The allocation matrix shows the assigned subcarriers.
+
+**Code:**
+```
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+num_users = 4          # Number of users
+num_subcarriers = 8    # Number of OFDMA subcarriers
+
+# Generate random channel gains
+channel_gain = np.random.rand(num_users, num_subcarriers)
+
+# Display channel gains
+print('Channel Gain Matrix:')
+print(channel_gain)
+
+# Initialize allocation matrix
+allocation = np.zeros((num_users, num_subcarriers))
+
+# Allocate each subcarrier to the user
+# having maximum channel gain
+for sc_idx in range(num_subcarriers):
+    
+    # Find best user for current subcarrier (0-indexed)
+    user_idx = np.argmax(channel_gain[:, sc_idx])
+    
+    # Allocate subcarrier
+    allocation[user_idx, sc_idx] = 1
+
+# Display allocation result
+print('\nSubcarrier Allocation Matrix:')
+print(allocation)
+
+# Display user allocation clearly
+for sc_idx in range(num_subcarriers):
+    
+    # np.where returns a tuple of arrays for row and column indices. For a 1D condition,
+    # it returns a tuple containing a single array. We need to access that array.
+    row_indices = np.where(allocation[:, sc_idx] == 1)[0]
+    
+    # Since only one user is allocated per subcarrier, take the first (and only) element
+    allocated_user = row_indices[0] # This is 0-indexed
+    
+    # Displaying 1-indexed subcarrier and user for clarity
+    print(f'Subcarrier {sc_idx + 1} allocated to User {allocated_user + 1}')
+
+# Plot allocation matrix
+plt.figure()
+plt.imshow(allocation, cmap='viridis', origin='lower') # origin='lower' makes y-axis start from bottom
+
+plt.xlabel('Subcarriers')
+plt.ylabel('Users')
+plt.title('OFDMA User Allocation')
+
+plt.colorbar(label='Allocation (1=allocated, 0=not allocated)')
+plt.xticks(np.arange(num_subcarriers), np.arange(1, num_subcarriers + 1))
+plt.yticks(np.arange(num_users), np.arange(1, num_users + 1))
+plt.grid(True, which='both', color='white', linestyle='-', linewidth=0.5)
+plt.show()
+```
+
+**Output:**
+
+Channel Gain Matrix:
+[[0.80633494 0.46677747 0.51535563 0.3916067  0.80081197 0.85998293
+  0.87273202 0.428658  ]
+ [0.40506825 0.23261563 0.93216923 0.90900839 0.61323237 0.07889641
+  0.99745908 0.40078192]
+ [0.67211178 0.14249259 0.05648878 0.31989503 0.41784783 0.49047154
+  0.33313975 0.64997813]
+ [0.8185262  0.59072503 0.79090533 0.31148777 0.48266027 0.69600667
+  0.03195787 0.32399206]]
+
+Subcarrier Allocation Matrix:
+[[0. 0. 0. 0. 1. 1. 0. 0.]
+ [0. 0. 1. 1. 0. 0. 1. 0.]
+ [0. 0. 0. 0. 0. 0. 0. 1.]
+ [1. 1. 0. 0. 0. 0. 0. 0.]]
+Subcarrier 1 allocated to User 4
+Subcarrier 2 allocated to User 4
+Subcarrier 3 allocated to User 2
+Subcarrier 4 allocated to User 2
+Subcarrier 5 allocated to User 1
+Subcarrier 6 allocated to User 1
+Subcarrier 7 allocated to User 2
+Subcarrier 8 allocated to User 3
+ <img width="792" height="485" alt="image" src="https://github.com/user-attachments/assets/21de0bf2-bb4b-4f15-a6ca-75cf19b71369" />
+
+**Result:**
+  Thus, the MATLAB simulation for user allocation in OFDMA communication was successfully implemented and analyzed.
+
+**5. Develop a MATLAB simulation for smart antenna systems in 5G communication**
+
+**Aim:**
+  To develop a MATLAB simulation for smart antenna systems used in 5G communication.
+
+**Objective:**
+  To simulate beamforming using a smart antenna array and analyze the radiation pattern in a 5G communication system.
+
+**Theory:**
+   Smart antenna systems use multiple antenna elements to improve wireless communication performance. In 5G communication, smart antennas help in:
+Beamforming
+Interference reduction
+Improved signal quality
+Increased network capacity
+Better coverage
+
+Beamforming focuses the transmitted signal toward a desired user direction instead of transmitting equally in all directions.
+
+The antenna array forms a directional radiation pattern using steering vectors.  
+
+**Code:**
+```
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Parameters
+N = 8                     # Number of antenna elements
+d = 0.5                   # Distance between elements (lambda/2, if d = 0.5)
+theta = np.arange(-90, 91, 1) # Angle range in degrees
+signal_angle = 20         # Desired signal direction in degrees
+
+# Convert angle to radians
+theta_rad = np.deg2rad(theta)
+signal_rad = np.deg2rad(signal_angle)
+
+# Steering vector for desired signal
+w = np.zeros(N, dtype=complex)
+for n in range(N):
+    # Python uses 0-based indexing, so (n) in MATLAB is (n-1) in Python
+    w[n] = np.exp(-1j * 2 * np.pi * d * n * np.sin(signal_rad))
+
+# Calculate array factor
+AF = np.zeros_like(theta_rad, dtype=complex)
+
+for k in range(len(theta_rad)):
+    sum_AF = 0 + 0j # Initialize as complex number
+    for n in range(N):
+        sum_AF = sum_AF + w[n] * np.exp(1j * 2 * np.pi * d * n * np.sin(theta_rad[k]))
+    AF[k] = sum_AF
+
+# Take the absolute value and normalize array factor
+AF_normalized = np.abs(AF) / np.max(np.abs(AF))
+
+# Plot radiation pattern
+plt.figure(figsize=(10, 6))
+plt.plot(theta, AF_normalized, linewidth=2)
+plt.grid(True)
+plt.xlabel('Angle (Degrees)')
+plt.ylabel('Normalized Gain')
+plt.title('Smart Antenna Beamforming for 5G (Cartesian Plot)')
+plt.show()
+
+# Polar plot
+plt.figure(figsize=(8, 8))
+plt.polar(theta_rad, AF_normalized, linewidth=2)
+plt.title('Polar Radiation Pattern')
+plt.show()
+```
+
+**Output:**
+
+<img width="1003" height="633" alt="image" src="https://github.com/user-attachments/assets/9963c63e-7a9c-4330-aab5-1deffe2c1b5c" />
+<img width="896" height="808" alt="image" src="https://github.com/user-attachments/assets/c6acda52-2270-4397-8046-b942cb055433" />
+
+**Result:**
+  Thus, the MATLAB simulation for smart antenna systems in 5G communication was successfully implemented and analyzed.
